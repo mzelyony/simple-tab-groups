@@ -114,6 +114,7 @@
             iconUrl: null,
             tabs: [],
             catchTabRules: '',
+            catchTabContainers: [],
             windowId: windowId || null,
         };
     }
@@ -135,6 +136,8 @@
         if (options.openNewWindowWhenCreateNewGroup && !windowId) {
             win = await createWindow();
             _groups[newGroupIndex].windowId = windowId = win.id;
+
+            updateBrowserActionData(windowId);
         }
 
         if (0 === newGroupIndex || saveCurrentTabsToThisGroup) {
@@ -156,36 +159,83 @@
             if (tabs.length) {
                 _groups[newGroupIndex].tabs = tabs.map(mapTab);
             }
+
+            updateBrowserActionData(windowId);
         }
 
         storage.set(options);
 
-        updateBrowserActionData(windowId);
+        sendExternalMessage({
+            groupAdded: true,
+            groupId: _groups[newGroupIndex].id,
+        });
+
         updateMoveTabMenus(windowId);
         saveGroupsToStorage();
 
         return returnNewGroupIndex ? newGroupIndex : _groups[newGroupIndex];
     }
 
-    // groups : Object or array of Object
-    function saveGroup(group) {
-        if (!group || (Array.isArray(group) && !group.length)) {
+    async function updateGroup(groupId, updateData) {
+        let groupIndex = _groups.findIndex(gr => gr.id === groupId);
+
+        if (-1 === groupIndex) {
             return;
         }
 
-        let groups = Array.isArray(group) ? group : [group];
-        _groups = _groups.map(g => groups.find(({ id }) => id === g.id) || g);
+        Object.assign(_groups[groupIndex], JSON.parse(JSON.stringify(updateData))); // JSON need for fix bug: dead object after close tab which create object
 
         saveGroupsToStorage();
+
+        sendExternalMessage({
+            groupUpdated: true,
+            groupId: groupId,
+        });
+    }
+
+    function sendExternalMessage(data, allowedRequestKeys = ['getGroupsList']) {
+        Object.keys(EXTENSIONS_WHITE_LIST)
+            .forEach(function(exId) {
+                if (allowedRequestKeys.some(key => EXTENSIONS_WHITE_LIST[exId].allowedRequests.includes(key))) {
+                    browser.runtime.sendMessage(exId, data);
+                }
+            });
+    }
+
+    function addUndoRemoveGroupItem(group) {
+        browser.menus.create({
+            id: CONTEXT_MENU_PREFIX_UNDO_REMOVE_GROUP + group.id,
+            title: browser.i18n.getMessage('undoRemoveGroupItemTitle', unSafeHtml(group.title)),
+            contexts: ['browser_action'],
+            icons: {
+                16: createGroupSvgIconUrl(group),
+            },
+            onclick: function(info) {
+                browser.menus.remove(info.menuItemId);
+
+                group.windowId = null;
+                _groups.push(group);
+
+                updateMoveTabMenus();
+                saveGroupsToStorage();
+            },
+        });
     }
 
     async function removeGroup(groupId) {
         let groupIndex = _groups.findIndex(gr => gr.id === groupId),
             groupWindowId = _groups[groupIndex].windowId;
 
+        addUndoRemoveGroupItem(_groups[groupIndex]);
+
         _groups.splice(groupIndex, 1);
 
         saveGroupsToStorage();
+
+        sendExternalMessage({
+            groupDeleted: true,
+            groupId: groupId,
+        });
 
         let oldGroupWindow = await getWindow(groupWindowId);
 
@@ -655,7 +705,7 @@
 
         if ('loading' === changeInfo.status && changeInfo.url) {
             if (isAllowUrl(changeInfo.url) && !isEmptyUrl(changeInfo.url)) {
-                let destGroup = _groups.find(gr => isCatchedUrl(changeInfo.url, gr));
+                let destGroup = _groups.find(gr => gr.catchTabContainers.includes(tab.cookieStoreId)) || _groups.find(gr => isCatchedUrl(changeInfo.url, gr));
 
                 if (destGroup && destGroup.id !== group.id) {
                     currentlyMovingTabs.push(tabId);
@@ -1106,7 +1156,7 @@
         }
 
         browser.browserAction.setTitle({
-            title: currentGroup.title + ' - ' + browser.i18n.getMessage('extensionName'),
+            title: unSafeHtml(currentGroup.title) + ' - ' + browser.i18n.getMessage('extensionName'),
         });
 
         browser.browserAction.setIcon({
@@ -1308,11 +1358,10 @@
         contexts: ['browser_action'],
         icons: {
             16: 'chrome://browser/skin/settings.svg',
-            32: 'chrome://browser/skin/settings.svg',
         },
     });
 
-    browser.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
+    browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         if (!isAllowSender(sender)) {
             return {
                 unsubscribe: true,
@@ -1328,42 +1377,98 @@
         }
 
         if (request.runAction) {
-            let currentWindow = await getWindow(),
-                currentGroup = _groups.find(gr => gr.windowId === currentWindow.id);
-
-            if ('load-next-group' === request.runAction.id) {
-                if (currentGroup) {
-                    loadGroupPosition('next');
-                }
-            } else if ('load-prev-group' === request.runAction.id) {
-                if (currentGroup) {
-                    loadGroupPosition('prev');
-                }
-            } else if ('load-first-group' === request.runAction.id) {
-                if (_groups[0]) {
-                    loadGroup(currentWindow.id, 0);
-                }
-            } else if ('load-last-group' === request.runAction.id) {
-                if (_groups[_groups.length - 1]) {
-                    loadGroup(currentWindow.id, _groups.length - 1);
-                }
-            } else if ('load-custom-group' === request.runAction.id) {
-                let groupIndex = _groups.findIndex(gr => gr.id === request.runAction.groupId);
-
-                if (-1 !== groupIndex) {
-                    loadGroup(currentWindow.id, groupIndex);
-                }
-            } else if ('add-new-group' === request.runAction.id) {
-                addGroup();
-            } else if ('delete-current-group' === request.runAction.id) {
-                if (currentGroup) {
-                    removeGroup(currentGroup.id);
-                }
-            } else if ('open-manage-groups' === request.runAction.id) {
-                openManageGroups();
-            }
+            runAction(request.runAction);
         }
     });
+
+    browser.runtime.onMessageExternal.addListener(function(request, sender, sendResponse) {
+        let extensionRules = {};
+
+        if (!isAllowExternalRequestAndSender(request, sender, extensionRules)) {
+            return sendResponse({
+                ok: false,
+                error: '[STG] Your extension/action does not in white list. If you want to add your extension/action to white list - please contact with me.',
+                yourExtentionRules: extensionRules,
+            });
+        }
+
+        if (request.areYouHere) {
+            sendResponse({
+                ok: true,
+            });
+        } else if (request.getGroupsList) {
+            sendResponse({
+                ok: true,
+                groupsList: _groups.map(function(group) {
+                    return {
+                        id: group.id,
+                        title: unSafeHtml(group.title),
+                        iconUrl: createGroupSvgIconUrl(group),
+                    };
+                }),
+            });
+        } else if (request.runAction) {
+            sendResponse(runAction(request.runAction));
+        }
+    });
+
+    async function runAction(action) {
+        let result = {
+            ok: false,
+        };
+
+        if (!action || !action.id) {
+            result.error = '[STG] Action id is empty';
+            return result;
+        }
+
+        let currentWindow = await getWindow(),
+            currentGroup = _groups.find(gr => gr.windowId === currentWindow.id);
+
+        if ('load-next-group' === action.id) {
+            if (currentGroup) {
+                await loadGroupPosition('next');
+                result.ok = true;
+            }
+        } else if ('load-prev-group' === action.id) {
+            if (currentGroup) {
+                await loadGroupPosition('prev');
+                result.ok = true;
+            }
+        } else if ('load-first-group' === action.id) {
+            if (_groups[0]) {
+                await loadGroup(currentWindow.id, 0);
+                result.ok = true;
+            }
+        } else if ('load-last-group' === action.id) {
+            if (_groups[_groups.length - 1]) {
+                await loadGroup(currentWindow.id, _groups.length - 1);
+                result.ok = true;
+            }
+        } else if ('load-custom-group' === action.id) {
+            let groupIndex = _groups.findIndex(gr => gr.id === action.groupId);
+
+            if (-1 === groupIndex) {
+                result.error = '[STG] group id not found';
+            } else {
+                await loadGroup(currentWindow.id, groupIndex);
+                result.ok = true;
+            }
+        } else if ('add-new-group' === action.id) {
+            await addGroup();
+            result.ok = true;
+        } else if ('delete-current-group' === action.id) {
+            if (currentGroup) {
+                await removeGroup(currentGroup.id);
+                result.ok = true;
+            }
+        } else if ('open-manage-groups' === action.id) {
+            await openManageGroups();
+            result.ok = true;
+        }
+
+        return result;
+    }
 
     window.background = {
         inited: false,
@@ -1402,7 +1507,7 @@
         createGroup,
         moveGroup,
         addGroup,
-        saveGroup,
+        updateGroup,
         removeGroup,
 
         reloadGroups: async function() {
@@ -1481,6 +1586,17 @@
             removeKey('enableKeyboardShortcutLoadByIndexGroup');
         }
 
+        if (0 > data.version.localeCompare('2.4')) {
+            result.dataChanged = true;
+
+            data.groups = data.groups.map(function(group) {
+                if (!group.catchTabContainers) {
+                    group.catchTabContainers = [];
+                }
+
+                return group;
+            });
+        }
 
 
 
@@ -1515,7 +1631,10 @@
             }
 
 
-            getWindow().then(win => lastFocusedNormalWindow = win);
+            getWindow().then(function(win) {
+                lastFocusedNormalWindow = win;
+                lastFocusedWinId = win.id;
+            });
 
             windows = windows.filter(win => 'normal' === win.type && !win.incognito);
 
@@ -1524,7 +1643,8 @@
                 return getTabs(win.id).then(tabs => winTabs[win.id] = tabs.map(mapTab)); // map need for normalize url
             }));
 
-            let syncedWinIds = [];
+            let syncedWinIds = [],
+                groupHasBeenSync = true;
 
             _groups = data.groups.map(function(group) {
                 if (!group.windowId) {
@@ -1534,18 +1654,21 @@
                 let winCandidate = windows
                     .filter(win => !syncedWinIds.includes(win.id))
                     .find(function(win) {
-                        if (0 === group.tabs.length) {
-                            return false;
-                        }
-
-                        let equalTabs = group.tabs.filter(tab => winTabs[win.id].some(t => t.url === tab.url));
-
-                        if (equalTabs.length === group.tabs.length) {
-                            syncedWinIds.push(win.id);
+                        if (win.id === group.windowId && !group.tabs.length && 1 === winTabs[win.id].length && isEmptyUrl(winTabs[win.id][0].url)) {
                             return true;
                         }
 
-                        if (equalTabs.length && (equalTabs.length + 1) === group.tabs.length) {
+                        if (!group.tabs.length) {
+                            return false;
+                        }
+
+                        if (winTabs[win.id].length < group.tabs.length) {
+                            return false;
+                        }
+
+                        let equalGroupTabs = group.tabs.filter(tab => winTabs[win.id].some(t => t.url === tab.url));
+
+                        if (equalGroupTabs.length === group.tabs.length && winTabs[win.id].length >= group.tabs.length) {
                             syncedWinIds.push(win.id);
                             return true;
                         }
@@ -1570,8 +1693,16 @@
                     group.windowId = null;
                 }
 
+                if (!group.windowId) {
+                    groupHasBeenSync = false;
+                }
+
                 return group;
             });
+
+            if (data.showNotificationIfGroupsNotSyncedAtStartup && !groupHasBeenSync && 0 === _groups.filter(gr => gr.windowId).length) {
+                notify(browser.i18n.getMessage('noOneGroupWasNotSynchronized'));
+            }
 
             window.background.inited = true;
 
@@ -1584,6 +1715,13 @@
             updateBrowserActionData();
             createMoveTabMenus();
             addEvents();
+
+            Object.keys(EXTENSIONS_WHITE_LIST)
+                .forEach(function(exId) {
+                    browser.runtime.sendMessage(exId, {
+                        IAmBack: true,
+                    });
+                });
         })
         .catch(notify);
 

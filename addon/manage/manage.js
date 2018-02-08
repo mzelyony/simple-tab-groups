@@ -101,9 +101,10 @@
                 }
             } else if ('set-tab-icon-as-group-icon' === action) {
                 let group = getGroupById(contextData.groupId);
-                group.iconUrl = group.tabs[contextData.tabIndex].favIconUrl || null;
 
-                BG.saveGroup(group);
+                BG.updateGroup(contextData.groupId, {
+                    iconUrl: group.tabs[contextData.tabIndex].favIconUrl || null,
+                });
 
                 renderGroupsCards();
 
@@ -123,7 +124,7 @@
                             .then(() => BG.removeGroup(group.id));
                     } else {
                         Popups.confirm(
-                                browser.i18n.getMessage('deleteGroupBody', safeHtml(unSafeHtml(group.title))),
+                                browser.i18n.getMessage('deleteGroupBody', group.title),
                                 browser.i18n.getMessage('deleteGroupTitle'),
                                 'delete',
                                 'is-danger'
@@ -149,9 +150,9 @@
         $on('change', '.group > .header input', function(event, data) {
             let group = getGroupById(data.groupId);
 
-            group.title = safeHtml(event.target.value.trim());
-
-            BG.saveGroup(group);
+            BG.updateGroup(data.groupId, {
+                title: createGroupTitle(event.target.value, group.id),
+            });
 
             let currentGroup = _groups.find(gr => gr.windowId === currentWindowId);
 
@@ -253,7 +254,7 @@
             classList = [];
 
         if (tab.cookieStoreId && tab.cookieStoreId !== DEFAULT_COOKIE_STORE_ID) {
-            container = containers.find(container => container.cookieStoreId === tab.cookieStoreId);
+            container = containers.find(container => container.cookieStoreId === tab.cookieStoreId) || container;
         }
 
         if (options.showUrlTooltipOnTabHover) {

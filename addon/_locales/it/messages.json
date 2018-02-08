@@ -1,30 +1,30 @@
 {
     "extensionDescription": {
-        "message": "建立、编辑并快速切换标签页群组。\n灵感来自传统扩展“Tab Groups” :)",
+        "message": "Crea, modifica e cambia i tab groups. \nIspirato all'estensione \"Tab Groups\" :)",
         "description": "Description of the extension."
     },
     "openSettings": {
-        "message": "设置",
+        "message": "Impostazioni",
         "description": "Settings context button title"
     },
     "manageGroupsTitle": {
-        "message": "管理群组",
+        "message": "Gestisci i tab groups",
         "description": "Manage groups"
     },
     "setTabIconAsGroupIcon": {
-        "message": "将标签页的图标设为群组的图标",
+        "message": "Imposta l'icona del gruppo",
         "description": "Set tab icon as group icon"
     },
     "moveTabToGroupDisabledTitle": {
-        "message": "将标签页移到标签页群组",
+        "message": "Sposta la tab nel gruppo",
         "description": "Move tab to group title"
     },
     "errorAnotherGroupAreLoading": {
-        "message": "正在载入另一个标签页群组，请稍候",
+        "message": "Attendere per favore; caricamento di un altro gruppo in corso.",
         "description": "Please wait, another group are loading"
     },
     "moveTabToGroupMessage": {
-        "message": "已将标签页 \"$tabtitle$\" 移到标签页群组 \"$grouptitle$\"。\n\n点我显示此标签页。",
+        "message": "La tab \"$tabtitle$\" è stata spostata dal gruppo \"$grouptitle$\".\n\nClicca qui per vedere la tab.",
         "description": "Tab moved popup title",
         "placeholders": {
             "grouptitle": {
@@ -38,55 +38,55 @@
         }
     },
     "warning": {
-        "message": "警告！",
+        "message": "Attenzione!",
         "description": "Warning!"
     },
     "success": {
-        "message": "成功！",
+        "message": "Completato!",
         "description": "Success!"
     },
     "ok": {
-        "message": "好的",
+        "message": "OK",
         "description": "OK button"
     },
     "save": {
-        "message": "保存",
+        "message": "Salva",
         "description": "Save"
     },
     "delete": {
-        "message": "删除",
+        "message": "Elimina",
         "description": "Delete"
     },
     "cancel": {
-        "message": "取消",
+        "message": "Annulla",
         "description": "Cancel"
     },
     "privateAndPinnedTabsAreNotSupported": {
-        "message": "隐私和固定的标签页不被支持",
+        "message": "Le schede private e quelle bloccate non sono supportate",
         "description": "Private and pinned tabs are not supported"
     },
     "thisTabIsNotSupported": {
-        "message": "这个标签页不被支持",
+        "message": "Questa tab non è supportata",
         "description": "This tab is not supported"
     },
     "confirmLoadGroupAndDeleteTabs": {
-        "message": "加载这个群组，会关闭所有当前标签页！",
+        "message": "Caricare questo gruppo chiuderà tutte le tab aperte!",
         "description": "Load this group will close all current tabs!"
     },
     "confirmDeleteLastGroupAndCloseTabs": {
-        "message": "删除这个群组，会关闭所有当前标签页！",
+        "message": "Eliminare questo gruppo chiuderà tutte le tab aperte!",
         "description": "Deleting this group will close all current tabs!"
     },
     "searchTabPlaceholder": {
-        "message": "搜索标签页……",
+        "message": "Cerca una tab...",
         "description": "Search a tab placeholder"
     },
     "filterTabsPlaceholder": {
-        "message": "过滤标签页（多个过滤器用*）",
+        "message": "Filtra le tab (filtri multipli con *)",
         "description": "Filter tabs (multiple filter with *)"
     },
     "invalidRegExpRuleTitle": {
-        "message": "正则表述式 '$regexp$' 有语法错误，将被忽略。",
+        "message": "La regola '$regexp$' non è valida e sarà saltata.",
         "description": "Invalid rule description",
         "placeholders": {
             "regexp": {
@@ -96,107 +96,107 @@
         }
     },
     "manageGroupViewGrid": {
-        "message": "网格式显示",
+        "message": "Visuale griglia",
         "description": "Grid display"
     },
     "manageGroupViewFreeArrange": {
-        "message": "自由排布",
+        "message": "Sposta liberamente (in versioni future)",
         "description": "Free arrange"
     },
     "closePopupAfterChangeGroup": {
-        "message": "切换标签页群组后关闭弹出框",
+        "message": "Chiudi il popup dopo aver cambiato il gruppo",
         "description": "Close popup after changing group"
     },
     "showNotificationAfterMoveTab": {
-        "message": "标签页移到其他标签页群组时显示通知",
+        "message": "Mostra una notifica quando una tab è stata spostata in un altro gruppo",
         "description": "Show notification when tab is moved to another group"
     },
     "createNewGroupAfterAttachTabToNewWindow": {
-        "message": "标签页移到其他窗口时建立新标签页群组",
+        "message": "Crea un nuovo gruppo se una tab è stata spostata in una nuova finestra",
         "description": "Create new group if tab is moved to new window"
     },
     "openManageGroupsInTab": {
-        "message": "在新标签页里打开【管理群组】",
+        "message": "Apri \"Gestione gruppi\" in una nuova tab",
         "description": "Open \"Manage Groups\" in new tab"
     },
     "showConfirmDialogBeforeGroupDelete": {
-        "message": "在删除群组之前，显示确认对话框",
+        "message": "Mostra una finestra di conferma prima di eliminare un gruppo",
         "description": "Show confirm dialog before group delete"
     },
     "individualWindowForEachGroup": {
-        "message": "每个群组独立窗口",
+        "message": "Una finestra per ogni gruppo",
         "description": "Individual window for each group"
     },
     "openNewWindowWhenCreateNewGroup": {
-        "message": "在创建新群组时，打开新窗口",
+        "message": "Apri una nuova finestra quando si crea un nuovo gruppo",
         "description": "Open new window when create new group"
     },
     "exportAddonSettingsTitle": {
-        "message": "备份你的“Simple Tab Groups”",
+        "message": "Effettua il backup dei gruppi di Simple Tab Groups",
         "description": "Backup your Simple Tab Groups"
     },
     "exportAddonSettingsDescription": {
-        "message": "把你的标签页群组导出到一个备份文件里，以便你在需要时能够恢复它们。",
+        "message": "Esporta i tuoi gruppi di tab in un file di backup per preservarli e ripristinarli in seguito se fosse necessario.",
         "description": "Export your tab groups into a backup file for safe-keeping, so that you can restore them at a later time if necessary."
     },
     "exportAddonSettingsButton": {
-        "message": "创建备份",
+        "message": "Crea un backup",
         "description": "Create backup"
     },
     "includeTabThumbnailsIntoBackup": {
-        "message": "在备份中包括缩略图（会让备份文件更大）",
+        "message": "Includi le anteprime delle tab all'interno del backup (la dimensione del file di backup diventerà maggiore)",
         "description": "Include tab thumbnails into backup (make backup file size bigger)"
     },
     "importAddonSettingsTitle": {
-        "message": "恢复“Simple Tab Groups”",
+        "message": "Ripristina i gruppi di Simple Tabs Groups",
         "description": "Restore Simple Tab Groups"
     },
     "importAddonSettingsDescription": {
-        "message": "加载一个备份文件，以恢复你的标签页群组。",
+        "message": "Carica un file di backup contenente i gruppi di tab che si vogliono ripristinare.",
         "description": "Load a backup file containing the tab groups you want to restore."
     },
     "importAddonSettingsWarning": {
-        "message": "还原扩展设置，会*清除*所有当前的设置和群组！",
+        "message": "Ripristinare le impostazioni dell'estensione CANCELLERÀ tutte le impostazioni correnti e tutti i gruppi!",
         "description": "Restore add-on settings will ERASE all existing settings and groups!"
     },
     "importAddonSettingsButton": {
-        "message": "恢复备份",
+        "message": "Ripristina da backup",
         "description": "Restore backup"
     },
     "importSettingsOldTabGroupsAddonTitle": {
-        "message": "恢复 Quicksaver 的“Tab Groups”",
+        "message": "Ripristina i \"Tab Groups\" da Quicksaver",
         "description": "Restore Quicksaver's \"Tab Groups\""
     },
     "importSettingsOldTabGroupsAddonDescription": {
-        "message": "加载老扩展“Tab Groups”的备份文件。",
+        "message": "Carica un file di backup dall'estensione \"Tab Groups\".",
         "description": "Load a backup file old \"Tab Groups\" addon."
     },
     "importSettingsOldTabGroupsAddonButton": {
-        "message": "导入 Quicksaver 的“Tab Groups”的设置",
+        "message": "Importa le impostazioni dall'estensione Quicksaver.",
         "description": "Import settings from Quicksaver's \"Tab Groups\" add-on"
     },
     "openGroupAfterChange": {
-        "message": "改动标签页群组后，打开该群组",
+        "message": "Apri un gruppo dopo averlo modificato",
         "description": "Open group after changing to it"
     },
     "showGroupIconWhenSearchATab": {
-        "message": "在搜索标签页的结果中显示群组图标",
+        "message": "Mostra l'icona del gruppo quando si sta cercando una tab",
         "description": "Show group icon when search a tab"
     },
     "showUrlTooltipOnTabHover": {
-        "message": "鼠标悬停在标签页上时，显示其网址",
+        "message": "Mostra il tooltip quando si passa con il cursore sopra una tab",
         "description": "Show url tooltip when hovering over tab"
     },
     "enableFastGroupSwitching": {
-        "message": "启用快速群组切换（并不加载所有标签页，而只加载活跃的标签页）",
+        "message": "Attiva il cambio veloce di gruppo (non carica tutte le tab, ma solamente quelle attive)",
         "description": "Enable fast group switching (without loading all tabs, only active)"
     },
     "enableFavIconsForNotLoadedTabs": {
-        "message": "对为加载的标签页也启用网站图标（如果需要更快速，那么禁用本选项吧）",
+        "message": "Attiva le icone per le tab non caricate (deseleziona questa checkbox se si vuole avere una maggiore velocità)",
         "description": "Enable fav-icons for not loaded tabs (disable this checkbox if more speed is needed)"
     },
     "newGroupTitle": {
-        "message": "群组\"$id$\"",
+        "message": "Gruppo $id$",
         "description": "group id",
         "placeholders": {
             "id": {
@@ -206,7 +206,7 @@
         }
     },
     "searchTabNotFoundTitle": {
-        "message": "找不到与 \"$search$\" 相关的标签页",
+        "message": "La ricerca di \"$search$\" nel titolo delle tab non ha prodotto alcun risultato",
         "description": "Search for tabs not found",
         "placeholders": {
             "search": {
@@ -216,35 +216,35 @@
         }
     },
     "openGroupInNewWindow": {
-        "message": "在新窗口打开标签页群组",
+        "message": "Apri il gruppo in una nuova finestra",
         "description": "Open group in new window"
     },
     "sortGroupsAZ": {
-        "message": "排序群组：升序↗",
+        "message": "Ordina i gruppi [A-Z]",
         "description": "Sort groups [A-Z]"
     },
     "sortGroupsZA": {
-        "message": "排序群组：降序↘",
+        "message": "Ordina i gruppi [Z-A]",
         "description": "Sort groups [Z-A]"
     },
     "settingsTitle": {
-        "message": "设置",
+        "message": "Impostazioni",
         "description": "Settings"
     },
     "groupSettings": {
-        "message": "群组设置",
+        "message": "Impostazioni dei gruppi",
         "description": "Group settings"
     },
     "deleteGroup": {
-        "message": "删除群组",
+        "message": "Elimina un gruppo",
         "description": "Delete group"
     },
     "deleteGroupTitle": {
-        "message": "删除群组吗？",
+        "message": "Vuoi eliminare il gruppo?",
         "description": "Delete group?"
     },
     "deleteGroupBody": {
-        "message": "确定要删除标签页群组 \"$name$\"？",
+        "message": "Vuoi eliminare il gruppo \"$name$\"? <br> La rimozione del gruppo comporta la sia la chiusura di tutte le tab del gruppo e della finestra!",
         "description": "Delete group?",
         "placeholders": {
             "name": {
@@ -254,7 +254,7 @@
         }
     },
     "groupTabsCount": {
-        "message": "$count$个标签页",
+        "message": "$count$ tab",
         "description": "Group tabs count",
         "placeholders": {
             "count": {
@@ -264,123 +264,145 @@
         }
     },
     "deleteTab": {
-        "message": "删除标签页",
+        "message": "Elimina tab",
         "description": "Delete tab"
     },
     "createNewTab": {
-        "message": "打开新标签页",
+        "message": "Apri una nuova tab",
         "description": "Open new tab"
     },
     "createNewGroup": {
-        "message": "建立新群组",
+        "message": "Crea un nuovo gruppo",
         "description": "Create new group"
     },
+    "createNewGroupWithCurrentTabs": {
+        "message": "... con le tab correnti",
+        "description": "Create new group with current tabs"
+    },
     "goBackButtonTitle": {
-        "message": "返回到标签页",
+        "message": "Torna indietro",
         "description": "Go back"
     },
     "goBackToGroupsButtonTitle": {
-        "message": "返回到群组",
+        "message": "Torna indietro ai gruppi",
         "description": "Go back to groups"
     },
     "title": {
-        "message": "标题",
+        "message": "Titolo",
         "description": "Title"
     },
     "icon": {
-        "message": "图标",
+        "message": "Icona",
         "description": "Icon"
     },
     "selectUserGroupIcon": {
-        "message": "加载图标",
+        "message": "Carica l'icona",
         "description": "Load icon"
     },
     "selectUserGroupIconWarnText": {
-        "message": "抱歉，你不能在这个弹出层里加载自定义图标，但你在【管理群组】里可以。\n打开【管理群组】吗？",
+        "message": "Mi dispiace, ma non puoi caricare icone personalizzate in questo popup, ma puoi caricare un'icona personalizzata per il gruppo all'interno della \"Gestione gruppi\".\nAprire \"Gestione gruppi\"?",
         "description": "Sorry, you can't load custom icon in this popup, but you can load custom group icon in \"Manage groups\".\nOpen \"Manage groups\"?"
     },
     "setRandomColor": {
-        "message": "设置随机颜色",
+        "message": "Imposta un colore casuale",
         "description": "Set random color"
     },
     "regexpForTabsTitle": {
-        "message": "用来捕捉标签页的正则表述式",
+        "message": "Espressione regolare per selezionare le tab",
         "description": "Regular expressions for catch tabs"
     },
     "regexpForTabsPlaceholder": {
-        "message": "正则表述式",
+        "message": "Espressione regolare",
         "description": "Regular expressions"
     },
     "regexpForTabsHelp": {
-        "message": "在这里输入正则表述式。网址与之相符的标签页会被自动移到本群组。\n每行一条规则，可设置多条规则。\n例如：\ngithub\\.com/drive4ik/simple-tab-groups - 捕捉此扩展源码库的所有页面\nbugzilla\\.mozilla\\.org - 捕捉 Firefox 错误反馈的所有页面\n(facebook|twitter|youtube)\\.com - 捕捉这几个社交网站的所有页面",
+        "message": "Inserisci un'espressione regolare per gli indirizzi. Le tab che hanno un indirizzo che corrisponde a quello dell'espressione regolare verrano spostate automaticamente in questo gruppo.\nUsa una linea per ogni regola e usa quanto regole vuoi.\nEsempi:\ngithub\\.com/drive4ik/simple-tab-groups - seleziona tutte le tab che riguardano il repository di questa estensione\nbugzilla\\.mozilla\\.org - seleziona tutte le tab nello strumento di cattura dei bug di Firefox\n(facebook|twitter|youtube)\\.com - seleziona tutte le tab dei social network",
         "description": "Regular exceptions helper"
     },
     "hotkeysTitle": {
-        "message": "快捷键",
+        "message": "Scorciatoie",
         "description": "Hotkeys"
     },
     "hotkeysDescription": {
-        "message": "在这里，你可以添加快捷键。<br>【限制】<br>1. 这些快捷键只在网页中生效(网址协议为http:、https:)。而在浏览器页面(about:)则无法工作，因为 WebExtensions 的 API 不允许如此。<br>2. 某些快捷键会在不同的键盘布局中无法工作。例如，在英语布局中创建的 <code>Ctrl + ~</code> ，在俄语布局中则无法工作，因为在后者中这个按键有另外的编码。要修复这个问题，你只要在后者中再创建一个快捷键 <code>Ctrl + Ё</code>。",
+        "message": "Qui puoi aggiungere le scorciatoie. <br>Limitazioni:<br>1. Queste scorciatoie funzioneranno solamente nelle pagine web (http:, https:). Sulle pagine del browser (about:) non funzionano a causa delle limitazioni imposte delle WebExtension API. <br>2. Alcune delle scorciatoie non funzioneranno con alcuni configurazioni della tastiera. La scorciatoia creata con la tastiera inglese <code>Ctrl + ~</code> non funziona sulla tastiera russa, perché questo tasto ha un altro codice. Per sistemare questo problema, crea una scorciatoia con un altro tasto: per il caso precedente, aggiungi la scorciatoia <code> Ctrl + Ё</code>.",
         "description": "Hotkeys description"
     },
     "addHotKeyButton": {
-        "message": "添加快捷键",
+        "message": "Aggiungi una scorciatoia",
         "description": "Add hotkey"
     },
     "deleteHotKeyButton": {
-        "message": "删除快捷键",
+        "message": "Elimina una scorciatoia",
         "description": "Delete hotkey"
     },
     "hotkeyPlaceholder": {
-        "message": "在这里按键",
+        "message": "Premere i tasti",
         "description": "Press keys here"
     },
     "selectAction": {
-        "message": "选择行为",
+        "message": "Seleziona l'azione",
         "description": "Select action"
     },
     "selectGroup": {
-        "message": "选择群组",
+        "message": "Seleziona il gruppo",
         "description": "Select group"
     },
     "hotkeyActionTitleLoadNextGroup": {
-        "message": "加载下一群组",
+        "message": "Carica il gruppo successivo",
         "description": "Load next group"
     },
     "hotkeyActionTitleLoadPrevGroup": {
-        "message": "加载上一群组",
+        "message": "Carica il gruppo precedente",
         "description": "Load previous group"
     },
     "hotkeyActionTitleLoadFirstGroup": {
-        "message": "加载最先的群组",
+        "message": "Carica il primo gruppo",
         "description": "Load first group"
     },
     "hotkeyActionTitleLoadLastGroup": {
-        "message": "加载最后的群组",
+        "message": "Carica l'ultimo gruppo",
         "description": "Load last group"
     },
     "hotkeyActionTitleLoadCustomGroup": {
-        "message": "加载自定义群组",
+        "message": "Carica un gruppo personalizzato",
         "description": "Load custom group"
     },
     "hotkeyActionTitleAddNewGroup": {
-        "message": "添加新群组",
+        "message": "Aggiungi un nuovo gruppo",
         "description": "Add new group"
     },
     "hotkeyActionTitleDeleteCurrentGroup": {
-        "message": "删除当前群组",
+        "message": "Elimina il gruppo corrente",
         "description": "Delete current group"
     },
     "hotkeyActionTitleOpenManageGroups": {
-        "message": "打开【管理群组】",
+        "message": "Apri la gestione dei gruppi",
         "description": "Open manage groups"
     },
     "whatsWrongMessage": {
-        "message": "出什么岔子了……\n请联系开发者，发送电子邮件，附上最新错误日志的JSON文件（在选项的底部有个保存日志的按钮）",
+        "message": "Qualcosa è andato male...\nPer favore contatta la sviluppatore con una email contenente gli ultimi log degli errori (per ottenere il log cercare un tasto apposito in fondo alla pagina delle impostazioni)",
         "description": "Whats wrong...\nPlease contact with developer by support email with last error logs (exist button at bottom of options)"
     },
     "saveErrorLogsIntoFile": {
-        "message": "把最新错误日志保存为JSON文件",
+        "message": "Salva l'ultimo log degli errori in un file JSON",
         "description": "Save last error logs into JSON file"
+    },
+    "showNotificationIfGroupsNotSyncedAtStartup": {
+        "message": "Mostra una notifica all'avvio se i gruppi di tab non sono stati sincronizzati",
+        "description": "Show notification if no one last opened groups not synced at startup"
+    },
+    "noOneGroupWasNotSynchronized": {
+        "message": "Nessun gruppo di tab è stato sincronizzato!\n\nPer favore, seleziona un gruppo di tab da sincronizzare.",
+        "description": "No one group was not synchronized!\n\nPlease, select group to sync tabs"
+    },
+    "undoRemoveGroupItemTitle": {
+        "message": "Ripristina il gruppo \"$grouptitle$\" che è stato chiuso",
+        "description": "Undo remove group menu title",
+        "placeholders": {
+            "grouptitle": {
+                "content": "$1",
+                "example": "Group 2"
+            }
+        }
     }
 }

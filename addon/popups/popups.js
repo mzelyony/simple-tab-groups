@@ -18,6 +18,11 @@ let Popups = {
     let templates = {
             'icon-color-tmpl': '<span id="groupIconColorCircle" style="background-color: {{iconColor}}"></span>',
             'icon-img-tmpl': '<img id="groupIconImg" src="{{iconUrl}}" class="is-inline-block size-16 h-margin-left-5" alt="" />',
+            'catch-container-tmpl': `
+                <div class="container-wrapper">
+                    <input type="checkbox" id="{{cookieStoreId}}" data-container {{checked}} />
+                    <label for="{{cookieStoreId}}" class="h-margin-left-5"><img src="{{iconUrl}}" class="size-16" style="fill: {{colorCode}};" /> {{name}}</label>
+                </div>`,
         },
         lastData = null,
         lastOptions = null,
@@ -79,18 +84,20 @@ let Popups = {
             BG.removeGroup(lastData.id);
         } else if ('submit-edit-group-popup' === action) {
             let group = lastData,
+                updateData = {},
                 groupIconWrapper = $('#groupIconWrapper');
 
             if ('image' === groupIconWrapper.dataset.iconType) {
-                group.iconUrl = $('#groupIconImg').src;
+                updateData.iconUrl = $('#groupIconImg').src;
             } else if ('color' === groupIconWrapper.dataset.iconType) {
-                group.iconColor = $('#groupIconColorCircle').style.backgroundColor; // safed color
-                group.iconUrl = null;
+                updateData.iconColor = $('#groupIconColorCircle').style.backgroundColor; // safed color
+                updateData.iconUrl = null;
             }
 
-            group.title = safeHtml($('#groupTitle').value.trim());
-            group.catchTabRules = $('#groupCatchTabRules').value.trim();
-            group.catchTabRules
+            updateData.title = createGroupTitle($('#groupTitle').value, group.id);
+
+            updateData.catchTabRules = $('#groupCatchTabRules').value.trim();
+            updateData.catchTabRules
                 .split(/\s*\n\s*/)
                 .filter(Boolean)
                 .forEach(function(regExpStr) {
@@ -101,7 +108,11 @@ let Popups = {
                     }
                 });
 
-            BG.saveGroup(group);
+            updateData.catchTabContainers = $$('[data-container]')
+                .filter(n => n.checked)
+                .map(n => n.id);
+
+            BG.updateGroup(group.id, updateData);
 
             let win = await BG.getWindow();
 
@@ -206,11 +217,21 @@ let Popups = {
             iconHtml = format(templates['icon-color-tmpl'], group);
         }
 
+        let containers = await loadContainers(),
+            containersHtml = containers
+            .map(function(container) {
+                container.checked = group.catchTabContainers.includes(container.cookieStoreId) ? 'checked' : '';
+                return format(templates['catch-container-tmpl'], container);
+            })
+            .join('');
+
         let parsedMainTemplate = format(mainTemplate, {
             groupTitle: unSafeHtml(group.title),
             groupIconColor: group.iconColor,
             iconHtml: iconHtml,
             groupCatchTabRules: group.catchTabRules,
+            containersClass: containers.length ? '' : 'is-hidden',
+            containersHtml: containersHtml,
         });
 
         let popupNode = showPopup(format(wrapperTemplate, {

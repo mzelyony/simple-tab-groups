@@ -1,0 +1,22 @@
+{
+    "extensionDescription": {
+        "message": "Загрузка определенной группы в расширении Simple Tab Groups",
+        "description": "Extension description"
+    },
+    "needInstallSTGExtension": {
+        "message": "Необходимо установить расширение Simple Tab Groups\n\nНажмите здесь чтобы открыть домашнюю страницу Simple Tab Groups",
+        "description": "Need install Simple Tab Groups extention\n\nClick here to open Simple Tab Groups home page"
+    },
+    "openSettings": {
+        "message": "Настройки",
+        "description": "Settings context button title"
+    },
+    "needSelectGroup": {
+        "message": "Пожалуйста, выберите группу",
+        "description": "Please, select group"
+    },
+    "defaultBrowserActionTitle": {
+        "message": "Название группы будет здесь - [STG plugin]",
+        "description": "Group title will be here - [STG plugin]"
+    }
+}

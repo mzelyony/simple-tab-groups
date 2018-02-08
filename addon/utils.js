@@ -5,14 +5,35 @@ const INNER_HTML = 'innerHTML',
     DEFAULT_COOKIE_STORE_ID = 'firefox-default',
     PRIVATE_COOKIE_STORE_ID = 'firefox-private',
     CONTEXT_MENU_PREFIX_GROUP = 'stg-move-group-id-',
+    CONTEXT_MENU_PREFIX_UNDO_REMOVE_GROUP = 'stg-undo-remove-group-id-',
     NEW_TAB_URL = '/stg-newtab/newtab.html',
+    EXTENSIONS_WHITE_LIST = {
+        'stg-plugin-create-new-group@drive4ik': {
+            allowedRequests: [
+                'runAction',
+            ],
+            allowedActionIds: [
+                'add-new-group',
+                'load-last-group',
+            ],
+        },
+        'stg-plugin-load-custom-group@drive4ik': {
+            allowedRequests: [
+                'runAction',
+                'getGroupsList',
+            ],
+            allowedActionIds: [
+                'load-custom-group',
+            ],
+        },
+    },
     DEFAULT_OPTIONS = {
         groups: [],
         lastCreatedGroupPosition: 0,
         version: '1.0',
 
         // options
-        enableFastGroupSwitching: true,
+        enableFastGroupSwitching: false,
         enableFavIconsForNotLoadedTabs: true,
         closePopupAfterChangeGroup: true,
         openGroupAfterChange: true,
@@ -24,6 +45,7 @@ const INNER_HTML = 'innerHTML',
         showConfirmDialogBeforeGroupDelete: true,
         individualWindowForEachGroup: false,
         openNewWindowWhenCreateNewGroup: false,
+        showNotificationIfGroupsNotSyncedAtStartup: true,
 
         hotkeys: [
             {
@@ -125,7 +147,7 @@ let $ = document.querySelector.bind(document),
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
     },
-    notify = function(message, timer = 30000, id) {
+    notify = function(message, timer = 20000, id) {
         if (id) {
             browser.notifications.clear(id);
         } else {
@@ -141,7 +163,7 @@ let $ = document.querySelector.bind(document),
             message: String(message),
         });
 
-        timer && setTimeout(browser.notifications.clear, timer, id);
+        setTimeout(browser.notifications.clear, timer, id);
 
         return new Promise(function(resolve, reject) {
             let called = false,
@@ -153,7 +175,7 @@ let $ = document.querySelector.bind(document),
                     }
                 }.bind(null, id);
 
-            setTimeout(() => !called && reject(), 30000, id);
+            setTimeout(() => !called && reject(), timer, id);
 
             browser.notifications.onClicked.addListener(listener);
         });
@@ -176,12 +198,44 @@ let $ = document.querySelector.bind(document),
         document.querySelector('html').setAttribute('lang', browser.i18n.getUILanguage().substring(0, 2));
     },
     isAllowSender = function(sender) {
-        if (MANIFEST.applications.gecko.id !== sender.id) {
+        if (sender.tab && sender.tab.incognito) {
             return false;
         }
 
-        if (sender.tab && sender.tab.incognito) {
+        return true;
+    },
+    isAllowExternalRequestAndSender = function(request, sender, extensionRules = {}) {
+        // all allowed action ids
+        // 'load-next-group',
+        // 'load-prev-group',
+        // 'load-first-group',
+        // 'load-last-group',
+        // 'load-custom-group',
+        // 'add-new-group',
+        // 'delete-current-group',
+        // 'open-manage-groups',
+
+        let extension = EXTENSIONS_WHITE_LIST[sender.id];
+
+        if (!extension) {
             return false;
+        }
+
+        Object.assign(extensionRules, extension);
+
+        if (!request || 'object' !== type(request)) {
+            return false;
+        }
+
+        let requestKeys = Object.keys(request),
+            allowedRequestKeys = extension.allowedRequests.concat(['areYouHere']);
+
+        if (!requestKeys.length || !requestKeys.every(key => allowedRequestKeys.includes(key))) {
+            return false;
+        }
+
+        if (request.runAction) {
+            return extension.allowedActionIds.includes(request.runAction.id);
         }
 
         return true;
@@ -302,6 +356,15 @@ let $ = document.querySelector.bind(document),
     },
     capitalize = function(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+    createGroupTitle = function(title, groupId) {
+        title = (title || '').trim();
+
+        if (!title) {
+            title = browser.i18n.getMessage('newGroupTitle', groupId);
+        }
+
+        return safeHtml(title);
     },
     checkVisibleElement = function(element) {
         let rect = element.getBoundingClientRect(),
@@ -433,7 +496,7 @@ let $ = document.querySelector.bind(document),
             return 'data:image/svg+xml;base64,' + b64EncodeUnicode(colorSvg);
         }
 
-        return '';
+        return null;
     },
     getBrowserActionSvgPath = function(group) {
         if (group.iconUrl) {
