@@ -28,6 +28,7 @@ const INNER_HTML = 'innerHTML',
         },
     },
     DEFAULT_OPTIONS = {
+        tabs: [],
         groups: [],
         lastCreatedGroupPosition: 0,
         version: '1.0',

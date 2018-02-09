@@ -7,6 +7,10 @@
 
     // return storage.get(null).then(console.log);
 
+browser.tabs.create({
+    url: 'about:addons'
+});
+
     let log = function(message = 'log', data = null) {
         try {
             throw Error(message);
@@ -112,7 +116,7 @@
             title: browser.i18n.getMessage('newGroupTitle', id),
             iconColor: randomColor(),
             iconUrl: null,
-            tabs: [],
+            // tabs: [],
             catchTabRules: '',
             catchTabContainers: [],
             windowId: windowId || null,
