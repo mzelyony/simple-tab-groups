@@ -7,11 +7,7 @@
 
     // return storage.get(null).then(console.log);
 
-browser.tabs.create({
-    url: 'about:addons'
-});
-
-    let log = function(message = 'log', data = null) {
+    let log = function(message = 'log', data = null, showNotification = true) {
         try {
             throw Error(message);
         } catch (e) {
@@ -23,8 +19,10 @@ browser.tabs.create({
                 fromLine: e.stack.split('@').map(l => l.split(prefix).join('')),
             });
 
-            notify(browser.i18n.getMessage('whatsWrongMessage'))
-                .then(() => browser.runtime.openOptionsPage());
+            if (showNotification) {
+                notify(browser.i18n.getMessage('whatsWrongMessage'))
+                    .then(() => browser.runtime.openOptionsPage());
+            }
         }
     };
 
@@ -678,7 +676,6 @@ browser.tabs.create({
             currentlyAddingTabs.includes(tabId) || // reject processing tabs
             'isArticle' in changeInfo || // not supported reader mode now
             'discarded' in changeInfo || // not supported discard tabs now
-            isStgNewTabUrl(tab.url) ||
             (tab.pinned && undefined === changeInfo.pinned)) { // pinned tabs are not supported
             return;
         }
@@ -690,6 +687,10 @@ browser.tabs.create({
         //     url: tab.url,
         //     title: tab.title,
         // }));
+
+        if (isStgNewTabUrl(tab.url)) {
+            tab.url = revokeStgNewTabUrl(tab.url);
+        }
 
         if ('pinned' in changeInfo) {
             if (isAllowUrl(tab.url)) {
@@ -1153,10 +1154,9 @@ browser.tabs.create({
         }));
     }
 
-    function setBrowserActionData(currentGroup) {
+    async function setBrowserActionData(currentGroup) {
         if (!currentGroup) {
-            resetBrowserActionData();
-            return;
+            return resetBrowserActionData();
         }
 
         browser.browserAction.setTitle({
@@ -1164,17 +1164,17 @@ browser.tabs.create({
         });
 
         browser.browserAction.setIcon({
-            path: getBrowserActionSvgPath(currentGroup),
+            path: await getBrowserActionSvgPath(currentGroup),
         });
     }
 
-    function resetBrowserActionData() {
+    async function resetBrowserActionData() {
         browser.browserAction.setTitle({
             title: MANIFEST.browser_action.default_title,
         });
 
         browser.browserAction.setIcon({
-            path: MANIFEST.browser_action.default_icon,
+            path: await getBrowserActionSvgPath(),
         });
     }
 
